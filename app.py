@@ -317,39 +317,72 @@ def forwarder_search():
     results = []
     interline = []
 
+    # 🔒 DEFAULTS (IMPORTANT – prevents Jinja crash)
+    cheapest = None
+    quickest = None
+    best_value = None
+
     if request.method == "POST":
-        origin = request.form["origin"]
-        dest = request.form["destination"]
+        origin = request.form["origin"].upper()
+        dest = request.form["destination"].upper()
         date = request.form["date"]
 
         results = db.execute(
             "SELECT * FROM flights WHERE origin=? AND destination=? AND date=?",
-            (origin, dest, date)).fetchall()
+            (origin, dest, date)
+        ).fetchall()
 
-        first_legs = db.execute("SELECT * FROM flights WHERE origin=? AND date=?",
-                                (origin, date)).fetchall()
-        second_legs = db.execute("SELECT * FROM flights WHERE destination=? AND date=?",
-                                 (dest, date)).fetchall()
+        # --- Interline logic ---
+        first_legs = db.execute(
+            "SELECT * FROM flights WHERE origin=? AND date=?",
+            (origin, date)
+        ).fetchall()
+
+        second_legs = db.execute(
+            "SELECT * FROM flights WHERE destination=? AND date=?",
+            (dest, date)
+        ).fetchall()
 
         for f1 in first_legs:
             for f2 in second_legs:
                 if f1["destination"] == f2["origin"]:
                     interline.append({
                         "legs": [f1, f2],
-                        "capacity": min(f1["capacity"], f2["capacity"])
+                        "capacity": min(f1["capacity"], f2["capacity"]),
+                        "price": RATE_CARD.get(f1["cargo_type"], 15),
+                        "transit": 12 + 8   # fake transit hours for demo
                     })
 
-    unique = []
-    seen = set()
+        # --- Build unified list for matrix ---
+        all_options = []
 
-    for r in interline:
-        key = (r["legs"][0]["origin"], r["legs"][0]["destination"], r["legs"][1]["destination"], r["capacity"])
-        if key not in seen:
-            unique.append(r)
-            seen.add(key)
+        for f in results:
+            all_options.append({
+                "price": RATE_CARD.get(f["cargo_type"], 15),
+                "transit": 12,   # demo value
+                "flight": f
+            })
 
-    return render_template("forwarder_search.html", results=results, interline=unique)
+        for r in interline:
+            all_options.append({
+                "price": r["price"],
+                "transit": r["transit"],
+                "flight": r
+            })
 
+        if all_options:
+            cheapest = min(all_options, key=lambda x: x["price"])
+            quickest = min(all_options, key=lambda x: x["transit"])
+            best_value = min(all_options, key=lambda x: x["price"] * x["transit"])
+
+    return render_template(
+        "forwarder_search.html",
+        results=results,
+        interline=interline,
+        cheapest=cheapest,
+        quickest=quickest,
+        best_value=best_value
+    )
 
 # --------------------------
 # BOOKING
