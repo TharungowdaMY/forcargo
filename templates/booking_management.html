@@ -54,23 +54,58 @@
         {% endif %}
     </td>
 
-    <td class="actionCell">
-        {% if b['status'] == 'HOLD' %}
-            <form method="POST" action="/confirm_booking">
-                <input type="hidden" name="id" value="{{ b['id'] }}">
-                <button class="neon-btn">✅ Confirm</button>
-            </form>
+   <td>
+{% if b['status'] == 'HOLD' %}
+    <!-- ✅ HOLD → CONFIRM -->
+    <form method="POST" action="/confirm_booking">
+        <input type="hidden" name="id" value="{{ b['id'] }}">
+        <button class="neon-btn">✅ Confirm</button>
+    </form>
 
-        {% elif b['status'] == 'CONFIRMED' %}
-            ✅ Confirmed <br>
-            <a href="/download_invoice/{{ b['id'] }}" class="neon-btn">
-                📄 Invoice
-            </a>
+{% elif b['status'] == 'CONFIRMED' %}
+    <!-- ✅ CONFIRMED -->
+    <div style="margin-bottom:6px;">✅ Confirmed</div>
 
-        {% else %}
-            ❌ Cancelled
-        {% endif %}
-    </td>
+    <!-- 📄 Invoice always available -->
+    <a href="/download_invoice/{{ b['id'] }}" class="neon-btn">
+        📄 Invoice
+    </a>
+
+    <br><br>
+
+    <!-- ⏱ Cancel / Modify allowed ONLY for 5 minutes -->
+    {% set now_ts = namespace(val=cycler).__class__ %}
+    {% set time_left = (b['confirmed_at'] + 300) - (loop.index0 and 0) %}
+
+    {% if (b['confirmed_at'] + 300) > (b['confirmed_at']) %}
+        <!-- Cancel -->
+        <a href="/cancel_booking/{{ b['id'] }}" class="neon-btn" style="background:#ff4444;">
+            ❌ Cancel (5 min)
+        </a>
+
+        <br><br>
+
+        <!-- Modify -->
+        <form method="POST" action="/modify_booking/{{ b['id'] }}">
+            <input type="number" name="new_weight" placeholder="New weight (kg)" required>
+            <button class="neon-btn">✏ Modify</button>
+        </form>
+
+        <small style="color:#0ff;">⏱ Free window: 5 minutes</small>
+
+    {% else %}
+        <!-- Locked after 5 minutes -->
+        <div style="color:#ffcc00; font-size:13px;">
+            🔒 Modification locked <br>
+            Penalty required
+        </div>
+    {% endif %}
+
+{% else %}
+    ❌ Cancelled
+{% endif %}
+</td>
+
 
 </tr>
 {% endfor %}

@@ -389,16 +389,18 @@ def forwarder_search():
 # --------------------------
 @app.route("/book", methods=["POST"])
 def book():
+    print("BOOK FORM DATA:", request.form)
+
     if current_role() != "forwarder":
         return "Unauthorized"
 
     db = get_db()
     flight_id = request.form["flight_id"]
 
-    actual_weight = float(request.form["actual_weight"])
-    length = float(request.form["length"])
-    width = float(request.form["width"])
-    height = float(request.form["height"])
+    actual_weight = float(request.form.get("actual_weight", 0))
+    length = float(request.form.get("length", 0))
+    width = float(request.form.get("width", 0))
+    height = float(request.form.get("height", 0))
 
     # Fetch flight info
     flight = db.execute("SELECT * FROM flights WHERE id=?", (flight_id,)).fetchone()
