@@ -38,18 +38,35 @@
         <a href="/chat/{{ b['id'] }}" class="neon-btn" style="margin-bottom:5px;">Chat</a>
         <br>
 
-        {% if b['status'] == "CONFIRMED" %}
-            <a href="/download_invoice/{{ b['id'] }}" class="neon-btn">Invoice</a>
+       {% if b['status'] == "CONFIRMED" %}
 
-        {% elif b['status'] == "HOLD" %}
-            <form method="POST" action="/confirm_booking">
-                <input type="hidden" name="id" value="{{ b['id'] }}">
-                <button class="neon-btn">Confirm</button>
-            </form>
+    {% set now = (namespace().t | default(0)) %}
+    {% set elapsed = (now - b['confirmed_at']) if b['confirmed_at'] else 9999 %}
 
-        {% else %}
-            Cancelled
-        {% endif %}
+    {% if elapsed <= 300 %}
+
+        <!-- 🟢 FREE WINDOW -->
+        <div style="display:flex; gap:6px; justify-content:center;">
+            <a href="/cancel_booking/{{ b['id'] }}" class="neon-btn">Cancel (Free)</a>
+            <a href="/modify_booking/{{ b['id'] }}" class="neon-btn">Modify (Free)</a>
+        </div>
+        <small style="color:#00ffcc;">⏱ Free window</small>
+
+    {% else %}
+
+        <!-- 🔴 PAID WINDOW -->
+        <div style="display:flex; gap:6px; justify-content:center;">
+            <a href="/cancel_booking/{{ b['id'] }}?paid=1" class="neon-btn">Cancel (₹ Fee)</a>
+            <a href="/modify_booking/{{ b['id'] }}?paid=1" class="neon-btn">Modify (₹ Fee)</a>
+        </div>
+        <small style="color:#ff5555;">Penalty applies</small>
+
+    {% endif %}
+
+{% else %}
+    {{ b['status'] }}
+{% endif %}
+
     </td>
 </tr>
 {% endfor %}

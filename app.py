@@ -901,6 +901,51 @@ def unread_count():
     """, (session["user_id"],)).fetchone()["c"]
 
     return jsonify({"unread": unread})
+@app.route("/cancel_booking/<int:id>")
+def cancel_booking(id):
+    db = get_db()
+    b = db.execute("SELECT * FROM bookings WHERE id=?", (id,)).fetchone()
+
+    import time
+    now = int(time.time())
+    elapsed = now - b["confirmed_at"]
+
+    penalty_fee = 0
+
+    if elapsed > 300:
+        penalty_fee = 0.10 * b["total"]  # 🔥 10% penalty
+
+    # restore capacity
+    db.execute(
+        "UPDATE flights SET capacity = capacity + ? WHERE id=?",
+        (b["weight"], b["flight_id"])
+    )
+
+    db.execute("""
+        UPDATE bookings
+        SET status='CANCELLED', penalty_paid=?
+        WHERE id=?
+    """, (penalty_fee, id))
+
+    db.commit()
+    return redirect("/bookings")
+@app.route("/modify_booking/<int:id>")
+def modify_booking(id):
+    db = get_db()
+    b = db.execute("SELECT * FROM bookings WHERE id=?", (id,)).fetchone()
+
+    import time
+    elapsed = int(time.time()) - b["confirmed_at"]
+
+    penalty = 0
+    if elapsed > 300:
+        penalty = 0.05 * b["total"]  # 5% modify fee
+
+    return f"""
+        Modify booking {id}<br>
+        Penalty applicable: ₹{penalty:.2f}<br>
+        (Demo screen)
+    """
 
 if __name__ == "__main__":
     with app.app_context():
