@@ -1,0 +1,31 @@
+<flights>
+    <flight>
+        <airline>Emirates</airline>
+        <flight_no>EK215</flight_no>
+        <origin>DXB</origin>
+        <destination>LAX</destination>
+        <date>2025-12-20</date>
+        <capacity>9000</capacity>
+        <cargo_type>Pharma</cargo_type>
+    </flight>
+
+    <flight>
+        <airline>Qatar Airways</airline>
+        <flight_no>QR17</flight_no>
+        <origin>DOH</origin>
+        <destination>LHR</destination>
+        <date>2025-12-21</date>
+        <capacity>8500</capacity>
+        <cargo_type>General</cargo_type>
+    </flight>
+
+    <flight>
+        <airline>Lufthansa</airline>
+        <flight_no>LH401</flight_no>
+        <origin>FRA</origin>
+        <destination>JFK</destination>
+        <date>2025-12-22</date>
+        <capacity>7800</capacity>
+        <cargo_type>High Value</cargo_type>
+    </flight>
+</flights>

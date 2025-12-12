@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="chat-box">
+
+    <h2>Chat for Booking #{{ booking['id'] }}</h2>
+
+    <div class="chat-messages">
+        {% for m in messages %}
+            <div class="chat-msg {{ 'me' if m['sender_id'] == session['user_id'] else 'them' }}">
+                <p>{{ m['message'] }}</p>
+                <span>{{ m['timestamp'] }}</span>
+            </div>
+        {% endfor %}
+    </div>
+
+    <form method="POST">
+        <textarea name="message" placeholder="Type your message..." required></textarea>
+        <button class="neon-btn">Send</button>
+    </form>
+
+</div>
+
+{% endblock %}

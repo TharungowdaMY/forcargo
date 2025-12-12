@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="page-title">Interline Route Finder</h1>
+
+<div class="neon-box">
+
+<form method="POST" style="margin-bottom:20px;">
+    <input type="text" name="origin" placeholder="Origin" required>
+    <input type="text" name="destination" placeholder="Destination" required>
+    <input type="date" name="date" required>
+    <button class="neon-btn" type="submit">Search</button>
+</form>
+
+<hr>
+
+<h2>Interline Options</h2>
+
+{% if routes %}
+    {% for r in routes %}
+        <div class="neon-subbox">
+
+            <p><b>Route:</b>
+                {{ r.legs[0]['origin'] }} →
+                {{ r.legs[0]['destination'] }} →
+                {{ r.legs[1]['destination'] }}
+            </p>
+
+            <p><b>Capacity:</b> {{ r.capacity }} kg</p>
+
+            <!-- BOOKING FORM MUST BE INSIDE LOOP -->
+            <form method="POST" action="/book">
+
+                <!-- TAKE FIRST LEG ID ALWAYS -->
+                <input type="hidden" name="flight_id" value="{{ r.legs[0]['id'] }}">
+
+                <input type="number" name="actual_weight" placeholder="Actual Weight (kg)" required>
+                <input type="number" name="length" placeholder="Length (cm)" required>
+                <input type="number" name="width" placeholder="Width (cm)" required>
+                <input type="number" name="height" placeholder="Height (cm)" required>
+
+                <button class="neon-btn">Hold</button>
+            </form>
+
+        </div>
+        <br>
+    {% endfor %}
+
+{% else %}
+    <p>No interline routes found.</p>
+{% endif %}
+
+</div>
+
+{% endblock %}

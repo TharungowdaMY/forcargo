@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="airline-card">
+    <h2>🚀 Airline Optimization Dashboard</h2>
+
+    <p>Total Capacity: <b>{{ total_capacity }} kg</b></p>
+    <p>Used Capacity: <b>{{ total_used }} kg</b></p>
+    <p style="color:#0ff">Unused Space: <b>{{ unused_capacity }} kg</b></p>
+</div>
+
+<div class="airline-card">
+    <h2>📊 Route Performance</h2>
+
+    <table class="airline-table">
+        <tr>
+            <th>Route</th>
+            <th>Total Capacity</th>
+            <th>Used</th>
+            <th>Status</th>
+        </tr>
+
+        {% for r, data in route_stats.items() %}
+        <tr>
+            <td>{{ r }}</td>
+            <td>{{ data.capacity }}</td>
+            <td>{{ data.used }}</td>
+
+            <td>
+                {% if data.capacity - data.used > data.capacity * 0.50 %}
+                    <span style="color:#ff4444;">Underutilized</span>
+                {% elif data.used > data.capacity * 0.90 %}
+                    <span style="color:#44ff44;">High Demand</span>
+                {% else %}
+                    Balanced
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="airline-card">
+    <h2>💡 Recommendations</h2>
+
+    {% for r in recommendations %}
+        <p>👉 <b>{{ r.route }}</b> — {{ r.message }}</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

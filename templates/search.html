@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="page-title">Search Flights</h1>
+
+<div class="neon-box">
+
+<form method="POST" class="search-form">
+
+    <label>Origin</label>
+    <input name="origin" placeholder="Enter Origin">
+
+    <label>Destination</label>
+    <input name="destination" placeholder="Enter Destination">
+
+    <label>Date</label>
+    <input type="date" name="date">
+
+    <label>Cargo Type</label>
+    <select name="cargo_type">
+        <option value="">Any</option>
+        <option value="General">General</option>
+        <option value="Pharma">Pharma</option>
+        <option value="Dangerous Goods">Dangerous Goods</option>
+        <option value="High Value">High Value</option>
+        <option value="Perishables">Perishables</option>
+    </select>
+
+    <button class="neon-btn">Search</button>
+</form>
+
+</div>
+
+<h2 class="section-title">Direct Flights</h2>
+
+{% if results %}
+    {% for f in results %}
+        <div class="neon-box">
+            <b>{{ f['airline'] }} {{ f['flight_no'] }}</b><br>
+            {{ f['origin'] }} → {{ f['destination'] }} <br>
+            Capacity: {{ f['capacity'] }} kg <br><br>
+
+            <form method="POST" action="/book">
+                <input type="hidden" name="flight_id" value="{{ f['id'] }}">
+                <input type="number" name="actual_weight" placeholder="Weight (kg)">
+                <input type="number" name="length" placeholder="Length (cm)">
+                <input type="number" name="width" placeholder="Width (cm)">
+                <input type="number" name="height" placeholder="Height (cm)">
+                <button class="neon-btn">Hold</button>
+            </form>
+        </div>
+    {% endfor %}
+{% else %}
+<p>No flights found.</p>
+{% endif %}
+
+{% endblock %}

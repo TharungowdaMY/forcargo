@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Profile</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+    <label>Email:</label><br>
+    <input type="email" name="email" value="{{ user['email'] }}"><br><br>
+
+    <label>Phone:</label><br>
+    <input type="text" name="phone" value="{{ user['phone'] }}"><br><br>
+
+    <label>Company Name:</label><br>
+    <input type="text" name="company" value="{{ user['company'] }}"><br><br>
+
+    <label>Profile Picture:</label><br>
+    <input type="file" name="profile_pic"><br><br>
+
+    <button type="submit">Save Changes</button>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="auth-container">
+
+    <div class="neon-auth-box">
+        <h2 class="neon-auth-title">Login</h2>
+
+        {% if message %}
+        <p class="error-msg">{{ message }}</p>
+        {% endif %}
+
+        <form method="POST">
+            <label>Username</label>
+            <input type="text" name="username" class="neon-input" required>
+
+            <label>Password</label>
+            <input type="password" name="password" class="neon-input" required>
+
+            <button class="neon-button">Login</button>
+        </form>
+
+        <p class="switch-text">Don't have an account?
+            <a href="/register" class="switch-link">Register</a>
+        </p>
+    </div>
+
+</div>
+
+{% endblock %}

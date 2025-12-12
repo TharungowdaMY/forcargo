@@ -1,0 +1,13 @@
+airline,flight_no,origin,destination,date,capacity,cargo_type
+Emirates,EK511,DEL,DXB,2025-12-15,5000,General
+Emirates,EK215,DXB,LAX,2025-12-15,8500,Pharma
+Qatar Airways,QR571,DEL,DOH,2025-12-15,4800,General
+Qatar Airways,QR17,DOH,LHR,2025-12-15,7500,General
+Lufthansa,LH760,DEL,FRA,2025-12-15,6200,Perishables
+Lufthansa,LH401,FRA,JFK,2025-12-15,9000,High Value
+British Airways,BA118,DOH,LHR,2025-12-15,7000,General
+British Airways,BA108,DXB,LHR,2025-12-15,6500,General
+KLM,KL871,DEL,AMS,2025-12-15,4300,Perishables
+KLM,KL641,AMS,JFK,2025-12-15,6000,General
+IndiGo,6E201,DEL,BOM,2025-12-15,3000,General
+Air India,AI101,DEL,JFK,2025-12-15,7000,General

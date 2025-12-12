@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="search-container">
+
+    <h1 class="section-title">Forwarder Search</h1>
+
+    <!-- Search Form Card -->
+    <div class="search-card glass-box">
+
+        <form method="POST" class="search-form">
+
+            <div class="form-group">
+                <label>Origin</label>
+                <input name="origin" placeholder="Enter Origin">
+            </div>
+
+            <div class="form-group">
+                <label>Destination</label>
+                <input name="destination" placeholder="Enter Destination">
+            </div>
+
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" name="date">
+            </div>
+
+            <button class="neon-btn" type="submit">Search</button>
+        </form>
+    </div>
+
+    <!-- DIRECT FLIGHTS SECTION -->
+    <h2 class="section-subtitle">Direct Flights</h2>
+    <div class="results-area">
+        {% if results %}
+            {% for f in results %}
+                <div class="result-card glass-box">
+                    <p><b>{{ f['airline'] }} {{ f['flight_no'] }}</b></p>
+                    <p>{{ f['origin'] }} → {{ f['destination'] }}</p>
+                    <p><b>Capacity:</b> {{ f['capacity'] }} kg</p>
+
+                    <form method="POST" action="/book" class="hold-form">
+                        <input type="hidden" name="flight_id" value="{{ f['id'] }}">
+
+                        <input type="number" name="actual_weight" placeholder="Actual Weight (kg)" required>
+                        <input type="number" name="length" placeholder="Length (cm)" required>
+                        <input type="number" name="width" placeholder="Width (cm)" required>
+                        <input type="number" name="height" placeholder="Height (cm)" required>
+
+                        <button class="neon-btn small">Hold</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty">No direct flights found.</p>
+        {% endif %}
+    </div>
+
+    <!-- INTERLINE SECTION -->
+    <h2 class="section-subtitle">Interline Options</h2>
+
+    <div class="results-area">
+        {% if interline %}
+            {% for r in interline %}
+                <div class="result-card glass-box">
+
+                    <p><b>Route:</b>
+                        {{ r.legs[0]['origin'] }} → {{ r.legs[0]['destination'] }} →
+                        {{ r.legs[1]['destination'] }}
+                    </p>
+
+                    <p><b>Capacity:</b> {{ r.capacity }} kg</p>
+
+                   <form method="POST" action="/book" class="hold-form">
+
+    <!-- FIXED: send the first leg's flight id -->
+    <input type="hidden" name="flight_id" value="{{ r.legs[0]['id'] }}">
+
+    <input type="number" name="actual_weight" placeholder="Actual Weight (kg)" required>
+    <input type="number" name="length" placeholder="Length (cm)" required>
+    <input type="number" name="width" placeholder="Width (cm)" required>
+    <input type="number" name="height" placeholder="Height (cm)" required>
+
+    <button class="neon-btn small">Hold</button>
+</form>
+
+
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty">No interline routes found.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<style>
+
+/* Section Headings */
+.section-title {
+    color: white;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.section-subtitle {
+    margin-top: 40px;
+    margin-bottom: 15px;
+    color: #ff1493;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+/* Search Box Styling */
+.search-card {
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group input {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+/* Results Area */
+.results-area {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.result-card {
+    padding: 20px;
+}
+
+.hold-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.hold-form input {
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+.empty {
+    color: #aaa;
+    font-style: italic;
+    padding-left: 10px;
+}
+
+/* Neon Button */
+.neon-btn {
+    background: #ff007f;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.neon-btn:hover {
+    background: #ff45a3;
+    transform: scale(1.05);
+}
+
+.neon-btn.small {
+    padding: 8px 18px;
+    font-size: 14px;
+}
+
+/* Glass effect */
+.glass-box {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(255, 0, 150, 0.2);
+}
+
+body {
+    background: #02040a;
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Profile</h2>
+
+<div style="display:flex; gap:20px;">
+    
+    <!-- Profile Photo -->
+    <div>
+        {% if user['profile_pic'] %}
+            <img src="/profile_pics/{{ user['profile_pic'] }}" width="150" height="150" style="border-radius:10px;">
+        {% else %}
+            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" width="150">
+        {% endif %}
+    </div>
+
+    <!-- User Details -->
+    <div>
+        <p><b>Username:</b> {{ user['username'] }}</p>
+        <p><b>Role:</b> {{ user['role'] }}</p>
+        <p><b>Email:</b> {{ user['email'] or 'Not added' }}</p>
+        <p><b>Phone:</b> {{ user['phone'] or 'Not added' }}</p>
+        <p><b>Company:</b> {{ user['company'] or 'Not added' }}</p>
+
+        <a href="/edit_profile"><button>Edit Profile</button></a>
+    </div>
+
+</div>
+{% endblock %}

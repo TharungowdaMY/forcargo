@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="auth-container">
+
+    <div class="neon-auth-box">
+        <h2 class="neon-auth-title">Create Account</h2>
+
+        <form method="POST">
+            <label>Username</label>
+            <input type="text" name="username" class="neon-input" required>
+
+            <label>Password</label>
+            <input type="password" name="password" class="neon-input" required>
+
+            <label>Role</label>
+            <select name="role" class="neon-input">
+                <option value="forwarder">Forwarder</option>
+                <option value="airline">Airline</option>
+            </select>
+
+            <button class="neon-button">Register</button>
+        </form>
+
+        <p class="switch-text">Already have an account?
+            <a href="/login" class="switch-link">Login</a>
+        </p>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForCargo Platform</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- 🌟 NAVIGATION BAR -->
+<nav class="main-nav">
+    <div class="logo">ForCargo</div>
+
+    <ul class="nav-links">
+
+        <li><a href="/">Home</a></li>
+        <li><a href="/interline">Interline Routes</a></li>
+
+        {% if session.get('user_id') %}
+
+            {% if session.get('role') == 'forwarder' %}
+                <li><a href="/forwarder_search">Forwarder Search</a></li>
+            {% endif %}
+
+            {% if session.get('role') == 'airline' %}
+                <li><a href="/upload">Upload Flight</a></li>
+                <li><a href="/upload_csv">Upload CSV Flights</a></li>
+                <li><a href="/big_feed">Big Airline Feed</a></li>
+                <li><a href="/airline_optimizer">Optimizer</a></li>
+            {% endif %}
+
+            <li><a href="/search">Search</a></li>
+            <li><a href="/bookings">Bookings</a></li>
+            <li><a href="/workspace">Workspace</a></li>
+            <li><a href="/logout">Logout ({{ session.get('role') }})</a></li>
+
+        {% else %}
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<!-- 🌟 HERO SECTION -->
+<header class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>ForCargo — Seamless Air Cargo Forwarding</h1>
+        <p>Smart, Fast & Transparent Booking with Real-Time Airline Capacity</p>
+    </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<div class="page-container">
+    {% block content %}{% endblock %}
+</div>
+
+
+<!-- ✅ CHAT BUTTON + BADGE -->
+<div id="chatWrapper" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+    <button id="chatToggle"
+            style="width:60px; height:60px; border-radius:50%; background:#ff0077; color:white; font-size:25px; border:none; box-shadow:0 0 10px #ff0077;">
+        💬
+    </button>
+
+    <!-- 🔴 unread badge -->
+    <span id="chatBadge"
+          style="
+            position:absolute;
+            top:-5px;
+            right:-5px;
+            background:red;
+            color:white;
+            padding:3px 7px;
+            border-radius:50%;
+            font-size:12px;
+            display:none;
+            box-shadow:0 0 5px red;
+          ">
+    </span>
+</div>
+
+
+<!-- 📌 Chat Box (already exists in your project) -->
+<div id="chatBox"
+     style="
+        position: fixed;
+        bottom: 100px;
+        right: 20px;
+        width: 320px;
+        background: white;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        display: none;
+        z-index: 9999;
+        padding: 10px;
+     ">
+    <h4>Cargo AI Assistant</h4>
+    <div id="chatLog" style="height:250px; overflow-y:auto; border:1px solid #ddd; padding:5px;"></div>
+    <input id="chatInput" type="text" placeholder="Ask something..." style="width:75%;">
+    <button id="chatSend">Send</button>
+</div>
+
+
+<!-- 🔥 UNREAD BADGE SCRIPT -->
+<script>
+    document.getElementById("chatToggle")?.addEventListener("click", () => {
+        let box = document.getElementById("chatBox");
+        box.style.display = box.style.display === "block" ? "none" : "block";
+
+        // remove badge on open
+        document.getElementById("chatBadge").style.display = "none";
+    });
+
+    async function checkUnread() {
+        try {
+            let res = await fetch("/chat/unread_count");
+            let data = await res.json();
+            let badge = document.getElementById("chatBadge");
+
+            if (data.unread > 0) {
+                badge.innerText = data.unread;
+                badge.style.display = "inline";
+            } else {
+                badge.style.display = "none";
+            }
+
+        } catch (err) {
+            console.log("Unread fetch error:", err);
+        }
+    }
+
+    setInterval(checkUnread, 5000);
+    checkUnread();
+</script>
+
+
+</body>
+</html>

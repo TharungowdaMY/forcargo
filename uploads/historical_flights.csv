@@ -1,0 +1,16 @@
+airline,flight_no,origin,destination,date,capacity,cargo_type,load_factor,delay,season
+Emirates,EK215,DXB,LAX,2024-01-10,9500,Pharma,82,12,Peak
+Emirates,EK215,DXB,LAX,2024-02-10,9200,Pharma,79,5,Normal
+Emirates,EK215,DXB,LAX,2024-03-10,9800,Pharma,88,20,Peak
+Emirates,EK7,DXB,LHR,2024-01-12,7800,Dangerous Goods,75,0,Normal
+Emirates,EK7,DXB,LHR,2024-02-12,7600,Dangerous Goods,73,15,Normal
+Qatar Airways,QR17,DOH,LHR,2024-01-08,8300,Pharma,81,10,Peak
+Qatar Airways,QR17,DOH,LHR,2024-02-08,8200,Pharma,80,0,Normal
+Qatar Airways,QR571,DEL,DOH,2024-01-15,4600,General,70,25,Peak
+Qatar Airways,QR571,DEL,DOH,2024-02-15,4800,General,72,5,Normal
+Lufthansa,LH401,FRA,JFK,2024-01-20,8900,Perishables,85,7,Peak
+Lufthansa,LH401,FRA,JFK,2024-02-20,9100,Perishables,87,2,Normal
+KLM,KL641,AMS,JFK,2024-01-05,6000,General,71,0,Normal
+KLM,KL641,AMS,JFK,2024-02-05,6200,General,74,8,Normal
+British Airways,BA108,DXB,LHR,2024-01-11,6400,High Value,76,12,Peak
+British Airways,BA118,DOH,LHR,2024-01-25,7800,General,79,18,Peak

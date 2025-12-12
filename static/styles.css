@@ -1,0 +1,665 @@
+/* ---------- GLOBAL ---------- */
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #0c0c0c;
+    color: #fff;
+}
+
+/* ---------- NAV BAR ---------- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 50px;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+}
+
+.nav-logo {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.nav-logo span {
+    color: #ff0066;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: #ffffffbb;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #ff0066;
+}
+
+/* ---------- HERO SECTION ---------- */
+.hero {
+    height: 70vh;
+    background: url("/static/hero.jpg") center/cover no-repeat;
+    position: relative;
+}
+
+.hero-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.55);
+}
+
+.hero-content {
+    position: absolute;
+    bottom: 100px;
+    left: 60px;
+}
+
+.hero-content h1 {
+    font-size: 55px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.hero-content p {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+/* ---------- PAGE CONTENT ---------- */
+.page-container {
+    padding: 50px;
+}
+
+/* ---------- MODERN BUTTONS ---------- */
+button,
+a.button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background: #ff0066;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover,
+a.button:hover {
+    background: #ff3385;
+}
+
+/* ---------- CARD UI ---------- */
+.card {
+    background: #161616;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+}
+/* ✨ Animated Hologram Background */
+body {
+    background: radial-gradient(circle at top, #0a0f24, #000);
+    background-size: 400% 400%;
+    animation: bgMove 12s ease infinite;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+}
+
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ✨ Neon Glass Panel */
+.neon-panel {
+    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(0, 255, 255, 0.35);
+    border-radius: 25px;
+    padding: 35px;
+    margin-top: 50px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow:
+        0 0 25px rgba(0, 255, 255, 0.3),
+        0 0 60px rgba(255, 0, 150, 0.2);
+}
+
+/* ✨ Neon Title */
+.neon-title {
+    color: #ff2ee6;
+    font-size: 34px;
+    font-weight: bold;
+    text-shadow: 0 0 15px #ff2ee6, 0 0 30px #ff2ee6;
+}
+
+/* ✨ Neon Subtitles */
+.neon-subtitle {
+    color: #00f7ff;
+    font-size: 24px;
+    margin-top: 30px;
+    text-shadow: 0 0 10px #00f7ff;
+}
+
+/* ✨ Neon Inputs */
+.neon-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 2px solid #00eaff;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 16px;
+    outline: none;
+    box-shadow: 0 0 12px #00eaff;
+}
+
+.neon-input:focus {
+    box-shadow: 0 0 25px #00eaff;
+}
+
+/* ✨ Neon Button */
+.neon-button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    font-size: 18px;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #ff0080, #ff4fef);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    text-shadow: 0 0 5px white;
+    box-shadow: 0 0 25px #ff00dd, 0 0 50px #ff00dd;
+    transition: 0.25s;
+}
+
+.neon-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px #ff00dd, 0 0 80px #ff00dd;
+}
+
+/* ✨ Divider */
+.neon-line {
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    margin: 25px 0;
+}
+
+/* ✨ Search Result Card */
+.result-card {
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 15px;
+    border: 1px solid rgba(0,255,255,0.3);
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 0 15px rgba(0,255,255,0.2);
+}
+
+/* ✨ Light text */
+.loading-text {
+    color: #bbbbbb;
+}
+/* Center Login/Register Section */
+.auth-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 120px;
+    margin-bottom: 80px;
+}
+
+/* Neon Box */
+.neon-auth-box {
+    width: 400px;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(0, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 25px rgba(0,255,255,0.25), 0 0 60px rgba(255,0,150,0.2);
+    color: white;
+}
+
+/* Title */
+.neon-auth-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #ff2ee6;
+    text-shadow: 0 0 10px #ff2ee6;
+    margin-bottom: 20px;
+}
+
+/* Labels */
+.neon-auth-box label {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Switch Between Login/Register */
+.switch-text {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.switch-link {
+    color: #00f7ff;
+    text-shadow: 0 0 10px #00f7ff;
+}
+
+/* Error Message */
+.error-msg {
+    color: #ff5f5f;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Reuse Neon Input & Button from your theme */
+.neon-input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 2px solid #00eaff;
+    background: rgba(0,0,0,0.3);
+    color: white;
+}
+/* Outer container */
+.interline-container {
+    width: 100%;
+    margin-top: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 80px;
+}
+
+/* Glass Neon Box */
+.neon-box {
+    width: 800px;
+    padding: 25px;
+    margin-bottom: 40px;
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(0, 255, 255, 0.35);
+
+    box-shadow: 0 0 20px rgba(0,255,255,0.25),
+                0 0 40px rgba(255,0,200,0.25);
+}
+
+/* Titles */
+.neon-title, .neon-subtitle {
+    font-size: 30px;
+    font-weight: bold;
+    color: #ff2ee6;
+    text-shadow: 0 0 12px #ff2ee6;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Search Form */
+.search-form label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+    color: white;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Neon Inputs */
+.neon-input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+
+    background: rgba(255,255,255,0.05);
+    border: 2px solid #00f0ff;
+    color: white;
+
+    box-shadow: 0 0 8px #00f0ff50;
+}
+
+/* Neon Button */
+.neon-button {
+    padding: 12px;
+    width: 200px;
+    align-self: center;
+    background: linear-gradient(135deg, #ff2ee6, #00eaff);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+
+    box-shadow: 0 0 15px #ff2ee6, 0 0 20px #00eaff;
+    transition: 0.2s ease;
+}
+
+.neon-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ff2ee6, 0 0 25px #00eaff;
+}
+
+/* Route Cards */
+.route-card {
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    color: white;
+
+    box-shadow: 0 0 20px rgba(0,255,255,0.25);
+}
+
+/* Capacity Tag */
+.capacity-tag {
+    padding: 5px 10px;
+    background: #00eaff50;
+    border-radius: 8px;
+    color: #00eaff;
+    font-weight: bold;
+}
+
+.route-path {
+    font-size: 20px;
+    color: #00eaff;
+    font-weight: bold;
+    text-shadow: 0 0 10px #00eaff;
+}
+
+.no-results {
+    color: #ff6b81;
+    text-align: center;
+}
+/* NAVBAR FIX */
+.main-nav {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 15px 40px;
+    z-index: 9999; /* Always on top */
+}
+
+/* logo */
+.logo {
+    font-size: 26px;
+    color: white;
+    font-weight: bold;
+}
+.logo span {
+    color: #ff007f;
+}
+
+/* nav links */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links li {
+    display: inline;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    color: #00eaff;
+    text-shadow: 0 0 10px #00eaff;
+}
+
+/* Push content below navbar so it's visible */
+.container {
+    margin-top: 120px !important;
+}
+/* NAVBAR FIX — MAKE LINKS NEVER HIDE */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;       /* ⭐ allows items to move to next line instead of disappearing */
+    max-width: 100%;       /* ⭐ prevents overflow */
+}
+
+.nav-links li {
+    white-space: nowrap;   /* keep each item intact */
+}
+.nav-links a {
+    font-size: 15px;
+    padding: 5px 5px;
+}
+.main-nav {
+    flex-wrap: wrap;    /* navbar itself can wrap */
+    padding: 10px 20px;
+}
+body {
+    background: #02040a;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Neon pink glow border */
+.neon-box {
+    background: rgba(255,255,255,0.06);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(255, 0, 150, 0.2);
+}
+
+/* Big Page Title */
+.page-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* Neon Header (like Forwarder Search) */
+.section-title {
+    color: #ff1493;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* Neon Button */
+.neon-btn {
+    background: #ff007f;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.neon-btn:hover {
+    background: #ff4da1;
+    transform: scale(1.05);
+}
+
+/* Input Fields */
+input, select {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    width: 200px;
+    background: #111;
+    color: white;
+}
+/* ---------- AIRLINE DASHBOARD UI ------------ */
+
+.airline-card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 25px;
+    margin: 25px auto;
+    width: 85%;
+    box-shadow: 0 0 25px rgba(255,0,120,0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+}
+
+.airline-card h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #ff0080;
+}
+
+.airline-input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 15px 0;
+    border-radius: 8px;
+    border: none;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-size: 15px;
+}
+
+.airline-input::placeholder {
+    color: #cccccc;
+}
+
+.neon-btn {
+    background: #ff0080;
+    padding: 12px 25px;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.neon-btn:hover {
+    background: #ff44aa;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ff0080;
+}
+
+.airline-table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+}
+
+.airline-table th {
+    background: rgba(255,255,255,0.12);
+    padding: 12px;
+    color: #ff80d0;
+    text-align: left;
+}
+
+.airline-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Scrollable table */
+.airline-scroll {
+    max-height: 350px;
+    overflow-y: auto;
+}
+.chat-box {
+    width: 70%;
+    margin: 25px auto;
+    padding: 20px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 20px;
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+.chat-messages {
+    max-height: 350px;
+    overflow-y: auto;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+.chat-msg {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    width: fit-content;
+    max-width: 70%;
+}
+
+.chat-msg.me {
+    background: #ff0080;
+    margin-left: auto;
+    color: white;
+}
+
+.chat-msg.them {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.chat-msg span {
+    font-size: 10px;
+    opacity: 0.7;
+    display: block;
+    margin-top: 5px;
+}
+
+textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.15);
+    color: white;
+}

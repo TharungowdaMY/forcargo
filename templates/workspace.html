@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="page-title">Workspace</h1>
+
+<div class="neon-box">
+
+    {% for m in messages %}
+        <div style="padding:10px; border-bottom:1px solid #333;">
+            <b>{{ m['sender'] }}:</b> {{ m['text'] }}
+        </div>
+    {% endfor %}
+
+    <form method="POST" style="margin-top:20px;">
+        <input name="sender" placeholder="Your Name">
+        <input name="text" placeholder="Message">
+        <button class="neon-btn">Send</button>
+    </form>
+
+</div>
+
+{% endblock %}
