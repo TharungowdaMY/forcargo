@@ -1,205 +1,183 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="search-container">
+<h1 class="page-title">✈️ Forwarder Search</h1>
 
-    <h1 class="section-title">Forwarder Search</h1>
+<!-- SEARCH FORM -->
+<div class="glass-card">
+    <form method="POST" class="search-grid">
+        <input name="origin" placeholder="Origin (DEL)" required>
+        <input name="destination" placeholder="Destination (LHR)" required>
+        <input type="date" name="date" required>
+        <button class="neon-btn">Search</button>
+    </form>
+</div>
 
-    <!-- Search Form Card -->
-    <div class="search-card glass-box">
+{% if results or interline %}
 
-        <form method="POST" class="search-form">
+<!-- MATRIX SUMMARY -->
+<div class="matrix-header">
 
-            <div class="form-group">
-                <label>Origin</label>
-                <input name="origin" placeholder="Enter Origin">
-            </div>
-
-            <div class="form-group">
-                <label>Destination</label>
-                <input name="destination" placeholder="Enter Destination">
-            </div>
-
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" name="date">
-            </div>
-
-            <button class="neon-btn" type="submit">Search</button>
-        </form>
+    <div class="matrix-box best">
+        <h4>🎯 Best Value</h4>
+        <p>{{ best_value.price }} ₹/kg</p>
+        <small>{{ best_value.transit|round(1) }} hrs</small>
     </div>
 
-    <!-- DIRECT FLIGHTS SECTION -->
-    <h2 class="section-subtitle">Direct Flights</h2>
-    <div class="results-area">
-        {% if results %}
-            {% for f in results %}
-                <div class="result-card glass-box">
-                    <p><b>{{ f['airline'] }} {{ f['flight_no'] }}</b></p>
-                    <p>{{ f['origin'] }} → {{ f['destination'] }}</p>
-                    <p><b>Capacity:</b> {{ f['capacity'] }} kg</p>
-
-                    <form method="POST" action="/book" class="hold-form">
-                        <input type="hidden" name="flight_id" value="{{ f['id'] }}">
-
-                        <input type="number" name="actual_weight" placeholder="Actual Weight (kg)" required>
-                        <input type="number" name="length" placeholder="Length (cm)" required>
-                        <input type="number" name="width" placeholder="Width (cm)" required>
-                        <input type="number" name="height" placeholder="Height (cm)" required>
-
-                        <button class="neon-btn small">Hold</button>
-                    </form>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p class="empty">No direct flights found.</p>
-        {% endif %}
+    <div class="matrix-box cheap">
+        <h4>💰 Cheapest</h4>
+        <p>{{ cheapest.price }} ₹/kg</p>
+        <small>{{ cheapest.transit|round(1) }} hrs</small>
     </div>
 
-    <!-- INTERLINE SECTION  dbcj-udsssu->
-    <h2 class="section-subtitle">Interline Options</h2>
-
-    <div class="results-area">
-        {% if interline %}
-            {% for r in interline %}
-                <div class="result-card glass-box">
-
-                    <p><b>Route:</b>
-                        {{ r.legs[0]['origin'] }} → {{ r.legs[0]['destination'] }} →
-                        {{ r.legs[1]['destination'] }}
-                    </p>
-
-                    <p><b>Capacity:</b> {{ r.capacity }} kg</p>
-
-                   <form method="POST" action="/book" class="hold-form">
-
-    <!-- FIXED: send the first leg's flight id -->
-    <input type="hidden" name="flight_id" value="{{ r.legs[0]['id'] }}">
-
-    <input type="number" name="actual_weight" placeholder="Actual Weight (kg)" required>
-    <input type="number" name="length" placeholder="Length (cm)" required>
-    <input type="number" name="width" placeholder="Width (cm)" required>
-    <input type="number" name="height" placeholder="Height (cm)" required>
-
-    <button class="neon-btn small">Hold</button>
-</form>
-
-
-                </div>
-            {% endfor %}
-        {% else %}
-            <p class="empty">No interline routes found.</p>
-        {% endif %}
+    <div class="matrix-box fast">
+        <h4>⚡ Quickest</h4>
+        <p>{{ quickest.transit|round(1) }} hrs</p>
+        <small>{{ quickest.price }} ₹/kg</small>
     </div>
 
 </div>
 
+{% endif %}
+
+<!-- DIRECT FLIGHTS -->
+<h2 class="section-title">🛫 Direct Flights</h2>
+
+{% if results %}
+    {% for f in results %}
+    <div class="route-card">
+        <div>
+            <b>{{ f.airline }} {{ f.flight_no }}</b><br>
+            {{ f.origin }} → {{ f.destination }}<br>
+            Capacity: {{ f.capacity }} kg
+        </div>
+
+        <form method="POST" action="/book" class="hold-form">
+            <input type="hidden" name="flight_id" value="{{ f.id }}">
+            <input type="number" name="actual_weight" placeholder="Weight kg" required>
+            <input type="number" name="length" placeholder="L cm" required>
+            <input type="number" name="width" placeholder="W cm" required>
+            <input type="number" name="height" placeholder="H cm" required>
+            <button class="neon-btn">Hold</button>
+        </form>
+    </div>
+    {% endfor %}
+{% else %}
+    <p class="muted">No direct flights found.</p>
+{% endif %}
+
+<!-- INTERLINE ROUTES -->
+<h2 class="section-title">🔗 Interline Options</h2>
+
+{% if interline %}
+    {% for r in interline %}
+    <div class="route-card">
+        <div>
+            <b>
+                {{ r.legs[0].origin }} → {{ r.legs[0].destination }} → {{ r.legs[1].destination }}
+            </b><br>
+            Capacity: {{ r.capacity }} kg
+        </div>
+
+        <form method="POST" action="/book" class="hold-form">
+            <input type="hidden" name="flight_id" value="{{ r.legs[0].id }}">
+            <input type="number" name="actual_weight" placeholder="Weight kg" required>
+            <input type="number" name="length" placeholder="L cm" required>
+            <input type="number" name="width" placeholder="W cm" required>
+            <input type="number" name="height" placeholder="H cm" required>
+            <button class="neon-btn">Hold</button>
+        </form>
+    </div>
+    {% endfor %}
+{% else %}
+    <p class="muted">No interline routes found.</p>
+{% endif %}
+
 <style>
+.page-title {
+    color:#fff;
+    margin-bottom:20px;
+}
 
-/* Section Headings */
+.glass-card {
+    background:rgba(255,255,255,0.06);
+    padding:20px;
+    border-radius:14px;
+    backdrop-filter: blur(10px);
+    margin-bottom:25px;
+}
+
+.search-grid {
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:15px;
+}
+
+.matrix-header {
+    display:flex;
+    gap:20px;
+    margin:30px 0;
+}
+
+.matrix-box {
+    flex:1;
+    padding:18px;
+    border-radius:14px;
+    text-align:center;
+    color:#fff;
+    box-shadow:0 0 15px rgba(0,0,0,0.5);
+}
+
+.matrix-box.best { background:linear-gradient(135deg,#ff0080,#ff8c00); }
+.matrix-box.cheap { background:linear-gradient(135deg,#00c6ff,#0072ff); }
+.matrix-box.fast { background:linear-gradient(135deg,#00ff99,#00cc66); }
+
 .section-title {
-    color: white;
-    font-size: 32px;
-    margin-bottom: 20px;
+    color:#ff2ebd;
+    margin:30px 0 15px;
 }
 
-.section-subtitle {
-    margin-top: 40px;
-    margin-bottom: 15px;
-    color: #ff1493;
-    font-weight: 700;
-    font-size: 24px;
-}
-
-/* Search Box Styling */
-.search-card {
-    padding: 25px;
-    margin-bottom: 30px;
-}
-
-.search-form {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group input {
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-}
-
-/* Results Area */
-.results-area {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.result-card {
-    padding: 20px;
+.route-card {
+    background:#0b0b0b;
+    border:1px solid #222;
+    border-radius:14px;
+    padding:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
 }
 
 .hold-form {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
+    display:flex;
+    gap:8px;
 }
 
-.hold-form input {
-    padding: 8px;
-    border-radius: 8px;
-    border: none;
-    outline: none;
+input {
+    background:#111;
+    border:1px solid #333;
+    color:#fff;
+    padding:6px 8px;
+    border-radius:6px;
 }
 
-.empty {
-    color: #aaa;
-    font-style: italic;
-    padding-left: 10px;
-}
-
-/* Neon Button */
 .neon-btn {
-    background: #ff007f;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 30px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
+    background:#ff0077;
+    color:white;
+    border:none;
+    padding:8px 16px;
+    border-radius:20px;
+    cursor:pointer;
+    box-shadow:0 0 10px #ff0077;
 }
 
 .neon-btn:hover {
-    background: #ff45a3;
-    transform: scale(1.05);
+    background:#ff2ebd;
 }
 
-.neon-btn.small {
-    padding: 8px 18px;
-    font-size: 14px;
+.muted {
+    color:#777;
 }
-
-/* Glass effect */
-.glass-box {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(255, 0, 150, 0.2);
-}
-
-body {
-    background: #02040a;
-}
-
 </style>
 
 {% endblock %}
