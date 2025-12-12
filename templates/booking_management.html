@@ -33,57 +33,24 @@
     <td>{{ b['status'] }}</td>
 
     <td>
-    {% if b['status'] == "HOLD" %}
 
-        <div style="display:flex; flex-direction:column; gap:6px; align-items:center;">
-
-            <!-- ⏳ HOLD TIMER -->
-            <span class="hold-timer"
-                  data-expiry="{{ b['expires_at'] }}">
-                ⏳ Holding...
-            </span>
-
-            <!-- 💬 CHAT BUTTON -->
-            <a href="/chat/{{ b['id'] }}"
-               style="
-                   padding:4px 10px;
-                   background:#ff0077;
-                   color:white;
-                   border-radius:6px;
-                   font-size:12px;
-                   text-decoration:none;
-               ">
-                💬 Chat
-            </a>
-
-            <!-- 🔊 BEEP -->
-            <audio class="beep">
-                <source src="{{ url_for('static', filename='beep.mp3') }}" type="audio/mpeg">
-            </audio>
-
-        </div>
-
-    {% else %}
-
-        {{ b['status'] }}
+        <!-- ⭐ CHAT BUTTON ADDED HERE -->
+        <a href="/chat/{{ b['id'] }}" class="neon-btn" style="margin-bottom:5px;">Chat</a>
         <br>
 
-        <!-- 💬 CHAT ALSO AFTER CONFIRM -->
-        <a href="/chat/{{ b['id'] }}"
-           style="
-               padding:4px 10px;
-               background:#444;
-               color:white;
-               border-radius:6px;
-               font-size:12px;
-               text-decoration:none;
-           ">
-            💬 Chat
-        </a>
+        {% if b['status'] == "CONFIRMED" %}
+            <a href="/download_invoice/{{ b['id'] }}" class="neon-btn">Invoice</a>
 
-    {% endif %}
-</td>
+        {% elif b['status'] == "HOLD" %}
+            <form method="POST" action="/confirm_booking">
+                <input type="hidden" name="id" value="{{ b['id'] }}">
+                <button class="neon-btn">Confirm</button>
+            </form>
 
+        {% else %}
+            Cancelled
+        {% endif %}
+    </td>
 </tr>
 {% endfor %}
 </table>
