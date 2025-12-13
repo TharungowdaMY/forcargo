@@ -1,84 +1,175 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="optimizer-container">
+<style>
+.optimizer-card {
+    background: linear-gradient(135deg, #0b0f1a, #111827);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 0 30px rgba(255,0,120,0.25);
+    color: white;
+}
 
-    <!-- HEADER -->
-    <div class="optimizer-header">
-        <h1>📊 Airline Capacity Optimizer</h1>
-        <p>Real-time utilization insights & smart recommendations</p>
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-box {
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid rgba(255,0,120,0.4);
+}
+
+.stat-box h2 {
+    color: #ff0077;
+    margin-bottom: 5px;
+}
+
+.table-modern {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.table-modern th,
+.table-modern td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.table-modern th {
+    color: #00f0ff;
+}
+
+.recommend-box {
+    background: rgba(0,240,255,0.08);
+    border-left: 4px solid #00f0ff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.premium-card {
+    margin-top: 40px;
+    background: linear-gradient(135deg, #1a0b12, #2a1020);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid gold;
+    box-shadow: 0 0 25px rgba(255,215,0,0.3);
+}
+
+.premium-card h2 {
+    color: gold;
+}
+
+.premium-feature {
+    margin: 12px 0;
+}
+
+.premium-btn {
+    margin-top: 20px;
+    padding: 14px 30px;
+    font-size: 16px;
+    background: linear-gradient(90deg, gold, orange);
+    color: black;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+}
+</style>
+
+<div class="optimizer-card">
+
+    <h1 class="page-title">📊 Airline Capacity Optimizer</h1>
+
+    <!-- STATS -->
+    <div class="stat-grid">
+        <div class="stat-box">
+            <h2>{{ total_capacity }}</h2>
+            <p>Total Capacity (kg)</p>
+        </div>
+        <div class="stat-box">
+            <h2>{{ total_used }}</h2>
+            <p>Used Capacity (kg)</p>
+        </div>
+        <div class="stat-box">
+            <h2>{{ unused_capacity }}</h2>
+            <p>Unused Capacity (kg)</p>
+        </div>
     </div>
 
-    <!-- KPI CARDS -->
-    <div class="kpi-grid">
-        <div class="kpi-card glow-blue">
-            <h3>Total Capacity</h3>
-            <span>{{ total_capacity }} kg</span>
-        </div>
+    <!-- ROUTES -->
+    <h2>📍 Route Utilization</h2>
 
-        <div class="kpi-card glow-green">
-            <h3>Used Capacity</h3>
-            <span>{{ total_used }} kg</span>
-        </div>
+    {% if route_stats %}
+    <table class="table-modern">
+        <tr>
+            <th>Route</th>
+            <th>Total Capacity</th>
+            <th>Used</th>
+        </tr>
 
-        <div class="kpi-card glow-red">
-            <h3>Unused Capacity</h3>
-            <span>{{ unused_capacity }} kg</span>
-        </div>
-    </div>
-
-    <!-- ROUTE UTILIZATION -->
-    <div class="glass-card">
-        <h2>📍 Route Utilization</h2>
-
-        {% if route_stats %}
-        <table class="neon-table">
-            <thead>
-                <tr>
-                    <th>Route</th>
-                    <th>Capacity (kg)</th>
-                    <th>Used (kg)</th>
-                    <th>Utilization</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for route, data in route_stats.items() %}
-                <tr>
-                    <td>{{ route }}</td>
-                    <td>{{ data.capacity }}</td>
-                    <td>{{ data.used }}</td>
-                    <td>
-                        {% if data.capacity > 0 %}
-                            {{ ((data.used / data.capacity) * 100) | round(1) }}%
-                        {% else %}
-                            0%
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-            <p class="muted">No route data available.</p>
-        {% endif %}
-    </div>
+        {% for route, data in route_stats.items() %}
+        <tr>
+            <td>{{ route }}</td>
+            <td>{{ data.capacity }} kg</td>
+            <td>{{ data.used }} kg</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No route data available.</p>
+    {% endif %}
 
     <!-- RECOMMENDATIONS -->
-    <div class="glass-card">
-        <h2>💡 Smart Recommendations</h2>
+    <h2 style="margin-top:30px;">💡 Smart Recommendations</h2>
 
-        {% if recommendations %}
-            <ul class="recommendation-list">
-                {% for r in recommendations %}
-                <li class="recommendation-item">
-                    <span class="route">{{ r.route }}</span>
-                    <span class="msg">{{ r.message }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p class="muted">No recommendations yet.</p>
-        {% endif %}
+    {% if recommendations %}
+        {% for r in recommendations %}
+            <div class="recommend-box">
+                <b>{{ r.route }}</b><br>
+                {{ r.message }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No recommendations yet.</p>
+    {% endif %}
+
+    <!-- PREMIUM SECTION -->
+    <div class="premium-card">
+        <h2>👑 Premium Airline Tools</h2>
+        <p>Unlock advanced intelligence & automation</p>
+
+        <div class="premium-feature">📈 <b>Advanced Analytics Dashboard</b><br>
+            • Most booked routes<br>
+            • Under-utilized flights<br>
+            • Peak cargo demand timings<br>
+            • Forwarder booking behavior
+        </div>
+
+        <div class="premium-feature">🛡 <b>Risk Scoring & Fraud Detection</b><br>
+            • Wrong cargo type detection<br>
+            • Suspicious dimensions<br>
+            • Overweight shipment alerts<br>
+            • Fake declaration detection
+        </div>
+
+        <div class="premium-feature">🤖 <b>Automation Tools</b><br>
+            • Auto-approve trusted forwarders<br>
+            • Smart interline suggestions<br>
+            • Automated notifications
+        </div>
+
+        <button class="premium-btn">
+            🚀 Upgrade to Premium (Coming Soon)
+        </button>
     </div>
 
 </div>
