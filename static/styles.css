@@ -663,3 +663,116 @@ textarea {
     background: rgba(255,255,255,0.15);
     color: white;
 }
+/* ===== OPTIMIZER DASHBOARD ===== */
+
+.optimizer-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px;
+    color: #fff;
+}
+
+.optimizer-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.optimizer-header h1 {
+    font-size: 34px;
+    background: linear-gradient(90deg, #ff0077, #00f0ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.optimizer-header p {
+    opacity: 0.8;
+}
+
+/* KPI CARDS */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.kpi-card {
+    padding: 25px;
+    border-radius: 16px;
+    text-align: center;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+.kpi-card h3 {
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.kpi-card span {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.glow-blue { box-shadow: 0 0 20px #00f0ff55; }
+.glow-green { box-shadow: 0 0 20px #00ff8855; }
+.glow-red { box-shadow: 0 0 20px #ff444455; }
+
+/* GLASS CARD */
+.glass-card {
+    background: rgba(0,0,0,0.5);
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 35px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+}
+
+/* TABLE */
+.neon-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.neon-table th {
+    background: rgba(255,255,255,0.1);
+    padding: 12px;
+}
+
+.neon-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.neon-table tr:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+/* RECOMMENDATIONS */
+.recommendation-list {
+    list-style: none;
+    padding: 0;
+}
+
+.recommendation-item {
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 15px rgba(255,0,120,0.3);
+}
+
+.recommendation-item .route {
+    font-weight: 700;
+    color: #00f0ff;
+}
+
+.recommendation-item .msg {
+    display: block;
+    margin-top: 6px;
+    opacity: 0.9;
+}
+
+.muted {
+    opacity: 0.6;
+}

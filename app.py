@@ -86,6 +86,77 @@ def register():
 
     return render_template("register.html")
 
+@app.route("/airline_optimizer")
+def airline_optimizer():
+    if current_role() != "airline":
+        return "Unauthorized"
+
+    db = get_db()
+
+    flights = db.execute("SELECT * FROM flights").fetchall()
+    bookings = db.execute(
+        "SELECT * FROM bookings WHERE status='CONFIRMED'"
+    ).fetchall()
+
+    total_capacity = sum(f["capacity"] for f in flights)
+    total_used = sum(b["weight"] for b in bookings)
+    unused_capacity = total_capacity - total_used
+
+    # -------- ROUTE STATS (THIS WAS MISSING) --------
+    route_stats = {}
+
+    for f in flights:
+        route = f"{f['origin']} → {f['destination']}"
+        if route not in route_stats:
+            route_stats[route] = {
+                "capacity": 0,
+                "used": 0
+            }
+        route_stats[route]["capacity"] += f["capacity"]
+
+    for b in bookings:
+        flight = db.execute(
+            "SELECT * FROM flights WHERE id=?",
+            (b["flight_id"],)
+        ).fetchone()
+
+        if flight:
+            route = f"{flight['origin']} → {flight['destination']}"
+            route_stats[route]["used"] += b["weight"]
+
+    # -------- RECOMMENDATIONS --------
+    recommendations = []
+
+    for route, stats in route_stats.items():
+        cap = stats["capacity"]
+        used = stats["used"]
+
+        if cap == 0:
+            continue
+
+        utilization = used / cap
+
+        if utilization < 0.5:
+            recommendations.append({
+                "route": route,
+                "message": "⚠ Low utilization – consider discounts or interline partnerships"
+            })
+        elif utilization > 0.9:
+            recommendations.append({
+                "route": route,
+                "message": "🔥 High demand – increase price or add frequency"
+            })
+
+    return render_template(
+        "airline_optimizer.html",
+        flights=flights,
+        bookings=bookings,
+        total_capacity=total_capacity,
+        total_used=total_used,
+        unused_capacity=unused_capacity,
+        route_stats=route_stats,
+        recommendations=recommendations
+    )
 
 # --------------------------
 # LOGIN
