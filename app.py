@@ -566,80 +566,30 @@ def workspace():
 @app.route("/confirm_booking", methods=["POST"])
 def confirm_booking():
     booking_id = request.form["id"]
-
     db = get_db()
-    b = db.execute("SELECT * FROM bookings WHERE id=?", (booking_id,)).fetchone()
 
     import time
     now = int(time.time())
 
-    if b["status"] != "HOLD":
-        return "Cannot confirm"
+    b = db.execute(
+        "SELECT * FROM bookings WHERE id=?",
+        (booking_id,)
+    ).fetchone()
+
+    if not b or b["status"] != "HOLD":
+        return "Invalid booking"
 
     if now > b["expires_at"]:
         return "Hold expired"
 
-    db.execute("UPDATE bookings SET status='CONFIRMED' WHERE id=?", (booking_id,))
+    db.execute("""
+        UPDATE bookings
+        SET status='CONFIRMED', confirmed_at=?
+        WHERE id=?
+    """, (now, booking_id))
+
     db.commit()
-
     return redirect("/bookings")
-
-
-@app.route("/airline_optimizer")
-def airline_optimizer():
-    if current_role() != "airline":
-        return "Unauthorized"
-
-    db = get_db()
-
-    flights = db.execute("SELECT * FROM flights").fetchall()
-    bookings = db.execute("SELECT * FROM bookings WHERE status='CONFIRMED'").fetchall()
-
-    total_capacity = sum(f["capacity"] for f in flights)
-    total_used = sum(b["weight"] for b in bookings)
-    unused_capacity = total_capacity - total_used
-
-    # Per route breakdown
-    route_stats = {}
-    for f in flights:
-        key = f"{f['origin']} → {f['destination']}"
-        if key not in route_stats:
-            route_stats[key] = {"capacity": 0, "used": 0}
-
-        route_stats[key]["capacity"] += f["capacity"]
-
-    for b in bookings:
-        flight = db.execute("SELECT * FROM flights WHERE id=?", (b["flight_id"],)).fetchone()
-        key = f"{flight['origin']} → {flight['destination']}"
-        route_stats[key]["used"] += b["weight"]
-
-    recommendations = []
-
-    for route, stats in route_stats.items():
-        capacity = stats["capacity"]
-        used = stats["used"]
-        unused = capacity - used
-
-        if unused > capacity * 0.50:
-            recommendations.append({
-                "route": route,
-                "message": "⚠ High unused space. Consider offering discounts or interline partnerships."
-            })
-        elif used > capacity * 0.90:
-            recommendations.append({
-                "route": route,
-                "message": "🔥 High demand! Increase pricing or add more frequency."
-            })
-
-    return render_template("airline_optimizer.html",
-                           flights=flights,
-                           bookings=bookings,
-                           total_capacity=total_capacity,
-                           total_used=total_used,
-                           unused_capacity=unused_capacity,
-                           route_stats=route_stats,
-                           recommendations=recommendations)
-
 
 @app.route("/ai/predict_capacity_ml", methods=["GET","POST"])
 def predict_capacity_ml_route():
@@ -904,33 +854,44 @@ def unread_count():
 
     return jsonify({"unread": unread})
 @app.route("/cancel_booking/<int:id>")
-def cancel_booking(id):
+@app.route("/cancel_booking/<int:booking_id>")
+def cancel_booking(booking_id):
     db = get_db()
-    b = db.execute("SELECT * FROM bookings WHERE id=?", (id,)).fetchone()
-
     import time
+
+    b = db.execute(
+        "SELECT * FROM bookings WHERE id=?",
+        (booking_id,)
+    ).fetchone()
+
+    if not b or b["status"] != "CONFIRMED":
+        return "Cannot cancel"
+
     now = int(time.time())
-    elapsed = now - b["confirmed_at"]
+    allowed_until = b["confirmed_at"] + 300  # 5 minutes
 
-    penalty_fee = 0
+    if now > allowed_until and b["penalty_paid"] == 0:
+        return "Penalty required to cancel after 5 minutes"
 
-    if elapsed > 300:
-        penalty_fee = 0.10 * b["total"]  # 🔥 10% penalty
+    # Restore capacity
+    flight = db.execute(
+        "SELECT * FROM flights WHERE id=?",
+        (b["flight_id"],)
+    ).fetchone()
 
-    # restore capacity
     db.execute(
         "UPDATE flights SET capacity = capacity + ? WHERE id=?",
-        (b["weight"], b["flight_id"])
+        (b["chargeable_weight"], b["flight_id"])
     )
 
-    db.execute("""
-        UPDATE bookings
-        SET status='CANCELLED', penalty_paid=?
-        WHERE id=?
-    """, (penalty_fee, id))
+    db.execute(
+        "UPDATE bookings SET status='CANCELLED' WHERE id=?",
+        (booking_id,)
+    )
 
     db.commit()
     return redirect("/bookings")
+
 @app.route("/modify_booking/<int:id>")
 def modify_booking(id):
     db = get_db()
