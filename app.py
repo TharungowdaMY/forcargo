@@ -127,25 +127,32 @@ def upload():
 
     if request.method == "POST":
         db = get_db()
-        db.execute(
-            """
-            INSERT INTO flights(airline, flight_no, origin, destination, date, capacity, cargo_type)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                request.form["airline"],
-                request.form["flight_no"],
-                request.form["origin"],
-                request.form["destination"],
-                request.form["date"],
-                request.form["capacity"],
-                request.form["cargo_type"]
+
+        db.execute("""
+            INSERT INTO flights (
+                airline, flight_no, origin, destination,
+                date, capacity, cargo_type,
+                departure_time, arrival_time, duration_minutes
             )
-        )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            request.form["airline"],
+            request.form["flight_no"],
+            request.form["origin"].upper(),
+            request.form["destination"].upper(),
+            request.form["date"],
+            int(request.form["capacity"]),
+            request.form["cargo_type"],
+            request.form["departure_time"],
+            request.form["arrival_time"],
+            int(request.form["duration_minutes"])
+        ))
+
         db.commit()
-        return render_template("upload.html", message="Flight uploaded!")
+        return render_template("upload.html", message="✅ Flight uploaded with timings!")
 
     return render_template("upload.html")
+
 
 
 import csv, json, os
@@ -439,6 +446,12 @@ def book():
         "HOLD", expires_at,
         rate, total_price, "UNPAID"
     ))
+    # Cancel any MODIFY_PENDING bookings by this user
+    db.execute("""
+        UPDATE bookings
+        SET status='CANCELLED'
+        WHERE user_id=? AND status='MODIFY_PENDING'
+    """, (session["user_id"],))
 
     db.commit()
     return redirect("/bookings")
@@ -893,22 +906,47 @@ def cancel_booking(booking_id):
     return redirect("/bookings")
 
 @app.route("/modify_booking/<int:id>")
-def modify_booking(id):
+@app.route("/modify_booking/<int:booking_id>")
+def modify_booking(booking_id):
+    if current_role() != "forwarder":
+        return "Unauthorized"
+
     db = get_db()
-    b = db.execute("SELECT * FROM bookings WHERE id=?", (id,)).fetchone()
-
     import time
-    elapsed = int(time.time()) - b["confirmed_at"]
 
-    penalty = 0
-    if elapsed > 300:
-        penalty = 0.05 * b["total"]  # 5% modify fee
+    booking = db.execute(
+        "SELECT * FROM bookings WHERE id=?",
+        (booking_id,)
+    ).fetchone()
 
-    return f"""
-        Modify booking {id}<br>
-        Penalty applicable: ₹{penalty:.2f}<br>
-        (Demo screen)
-    """
+    if not booking or booking["status"] != "CONFIRMED":
+        return "Invalid booking"
+
+    now = int(time.time())
+    allowed_until = booking["confirmed_at"] + 300  # 5 minutes
+
+    if now > allowed_until:
+        return "Modification window expired. Penalty required."
+
+    # 1️⃣ Restore flight capacity
+    db.execute("""
+        UPDATE flights
+        SET capacity = capacity + ?
+        WHERE id=?
+    """, (booking["chargeable_weight"], booking["flight_id"]))
+
+    # 2️⃣ Mark booking as MODIFY_PENDING
+    db.execute("""
+        UPDATE bookings
+        SET status='MODIFY_PENDING'
+        WHERE id=?
+    """, (booking_id,))
+
+    db.commit()
+
+    # 3️⃣ Redirect back to forwarder search
+    return redirect("/forwarder_search")
+
 
 if __name__ == "__main__":
     with app.app_context():

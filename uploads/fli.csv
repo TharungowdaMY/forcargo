@@ -1,0 +1,5 @@
+airline,flight_no,origin,destination,date,departure_time,arrival_time,duration_minutes,capacity,cargo_type
+Lufthansa,LH401,FRA,JFK,2025-12-20,10:00,13:30,510,9000,General
+Qatar Airways,QR571,DEL,DOH,2025-12-20,04:00,06:30,150,4800,General
+Qatar Airways,QR17,DOH,LHR,2025-12-20,08:00,12:00,240,8500,General
+Emirates,EK511,DEL,DXB,2025-12-20,02:00,05:30,210,10000,Pharma

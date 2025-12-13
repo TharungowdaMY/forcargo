@@ -41,56 +41,102 @@
 {% endif %}
 
 <!-- DIRECT FLIGHTS -->
-<h2 class="section-title">🛫 Direct Flights</h2>
+<h3 class="section-title">✈ Direct Flights</h3>
 
 {% if results %}
     {% for f in results %}
-    <div class="route-card">
-        <div>
-            <b>{{ f.airline }} {{ f.flight_no }}</b><br>
-            {{ f.origin }} → {{ f.destination }}<br>
-            Capacity: {{ f.capacity }} kg
-        </div>
+        <div class="flight-card">
 
-        <form method="POST" action="/book" class="hold-form">
-            <input type="hidden" name="flight_id" value="{{ f.id }}">
-            <input type="number" name="actual_weight" placeholder="Weight kg" required>
-            <input type="number" name="length" placeholder="L cm" required>
-            <input type="number" name="width" placeholder="W cm" required>
-            <input type="number" name="height" placeholder="H cm" required>
-            <button class="neon-btn">Hold</button>
-        </form>
-    </div>
+            <h4>{{ f['airline'] }} {{ f['flight_no'] }}</h4>
+
+            <div class="route">
+                {{ f['origin'] }} → {{ f['destination'] }}
+            </div>
+
+            <div class="time-box">
+                🕒 {{ f['departure_time'] }} → {{ f['arrival_time'] }}
+                ({{ f['duration_minutes'] }} mins)
+            </div>
+
+            <div>
+                📦 Capacity: {{ f['capacity'] }} kg
+                | Cargo: {{ f['cargo_type'] }}
+            </div>
+
+            <form method="POST" action="/book">
+                <input type="hidden" name="flight_id" value="{{ f['id'] }}">
+
+                <input type="number" name="actual_weight" placeholder="Weight (kg)" required>
+
+                <input type="number" name="length" placeholder="Length (cm)" required>
+                <input type="number" name="width" placeholder="Width (cm)" required>
+                <input type="number" name="height" placeholder="Height (cm)" required>
+
+                <button class="neon-btn">📌 Hold</button>
+            </form>
+
+        </div>
     {% endfor %}
 {% else %}
-    <p class="muted">No direct flights found.</p>
+    <p>No direct flights found.</p>
 {% endif %}
 
 <!-- INTERLINE ROUTES -->
-<h2 class="section-title">🔗 Interline Options</h2>
+<h3 class="section-title">🔁 Interline Routes</h3>
 
 {% if interline %}
     {% for r in interline %}
-    <div class="route-card">
-        <div>
-            <b>
-                {{ r.legs[0].origin }} → {{ r.legs[0].destination }} → {{ r.legs[1].destination }}
-            </b><br>
-            Capacity: {{ r.capacity }} kg
+
+        <div class="interline-card">
+
+            <h4>
+                {{ r.legs[0]['origin'] }}
+                → {{ r.legs[0]['destination'] }}
+                → {{ r.legs[1]['destination'] }}
+            </h4>
+
+            <!-- LEG 1 -->
+            <div class="leg-box">
+                ✈ {{ r.legs[0]['airline'] }} {{ r.legs[0]['flight_no'] }}
+                🕒 {{ r.legs[0]['departure_time'] }} → {{ r.legs[0]['arrival_time'] }}
+                ({{ r.legs[0]['duration_minutes'] }} mins)
+            </div>
+
+            <!-- LEG 2 -->
+            <div class="leg-box">
+                ✈ {{ r.legs[1]['airline'] }} {{ r.legs[1]['flight_no'] }}
+                🕒 {{ r.legs[1]['departure_time'] }} → {{ r.legs[1]['arrival_time'] }}
+                ({{ r.legs[1]['duration_minutes'] }} mins)
+            </div>
+
+            <!-- TOTAL TIME -->
+            <div class="total-time">
+                ⏱ Total Time:
+                {{ r.legs[0]['duration_minutes'] + r.legs[1]['duration_minutes'] }} mins
+            </div>
+
+            <div>
+                📦 Capacity: {{ r.capacity }} kg
+                | Cargo: {{ r.cargo_type }}
+            </div>
+
+            <form method="POST" action="/book">
+                <input type="hidden" name="flight_id" value="{{ r.legs[0]['id'] }}">
+
+                <input type="number" name="actual_weight" placeholder="Weight (kg)" required>
+
+                <input type="number" name="length" placeholder="Length (cm)" required>
+                <input type="number" name="width" placeholder="Width (cm)" required>
+                <input type="number" name="height" placeholder="Height (cm)" required>
+
+                <button class="neon-btn">📌 Hold Interline</button>
+            </form>
+
         </div>
 
-        <form method="POST" action="/book" class="hold-form">
-            <input type="hidden" name="flight_id" value="{{ r.legs[0].id }}">
-            <input type="number" name="actual_weight" placeholder="Weight kg" required>
-            <input type="number" name="length" placeholder="L cm" required>
-            <input type="number" name="width" placeholder="W cm" required>
-            <input type="number" name="height" placeholder="H cm" required>
-            <button class="neon-btn">Hold</button>
-        </form>
-    </div>
     {% endfor %}
 {% else %}
-    <p class="muted">No interline routes found.</p>
+    <p>No interline routes found.</p>
 {% endif %}
 
 <style>

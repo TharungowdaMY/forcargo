@@ -1,32 +1,27 @@
-{% extends "base.html" %}
-{% block content %}
+<form method="POST">
 
-<div class="airline-card">
-    <h2>✈ Upload Flight Capacity</h2>
+    <input class="airline-input" name="airline" placeholder="Airline Name" required>
+    <input class="airline-input" name="flight_no" placeholder="Flight Number" required>
 
-    <form method="POST">
+    <input class="airline-input" name="origin" placeholder="Origin (DEL)" required>
+    <input class="airline-input" name="destination" placeholder="Destination (DXB)" required>
 
-        <input class="airline-input" name="airline" placeholder="Airline Name">
-        <input class="airline-input" name="flight_no" placeholder="Flight Number">
+    <input class="airline-input" type="date" name="date" required>
 
-        <input class="airline-input" name="origin" placeholder="Origin (e.g., DEL)">
-        <input class="airline-input" name="destination" placeholder="Destination (e.g., DXB)">
+    <input class="airline-input" type="time" name="departure_time" required>
+    <input class="airline-input" type="time" name="arrival_time" required>
 
-        <input class="airline-input" type="date" name="date">
+    <input class="airline-input" name="duration_minutes" placeholder="Duration (mins)" required>
 
-        <input class="airline-input" name="capacity" placeholder="Capacity (kg)">
+    <input class="airline-input" name="capacity" placeholder="Capacity (kg)" required>
 
-        <select class="airline-input" name="cargo_type">
-            <option>General</option>
-            <option>Pharma</option>
-            <option>Dangerous Goods</option>
-            <option>High Value</option>
-            <option>Perishables</option>
-            <option>Animals</option>
-        </select>
+    <select class="airline-input" name="cargo_type">
+        <option>General</option>
+        <option>Pharma</option>
+        <option>Dangerous Goods</option>
+        <option>High Value</option>
+        <option>Perishables</option>
+    </select>
 
-        <button class="neon-btn" type="submit">Upload Flight</button>
-    </form>
-</div>
-
-{% endblock %}
+    <button class="neon-btn">Upload Flight</button>
+</form>
