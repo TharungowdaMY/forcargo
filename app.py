@@ -8,7 +8,7 @@ import csv
 import xml.etree.ElementTree as ET
 import pandas as pd
 from PyPDF2 import PdfReader
-
+#something to ckeck
 def insert_flight(db, row):
     if not isinstance(row, dict):
         row = row.to_dict()

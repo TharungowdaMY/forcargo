@@ -110,15 +110,7 @@
             </div>
 
             <!-- TOTAL TIME -->
-            <div class="total-time">
-                ⏱ Total Time:
-                {{ r.legs[0]['duration_minutes'] + r.legs[1]['duration_minutes'] }} mins
-            </div>
 
-            <div>
-                📦 Capacity: {{ r.capacity }} kg
-                | Cargo: {{ r.cargo_type }}
-            </div>
 
             <form method="POST" action="/book">
                 <input type="hidden" name="flight_id" value="{{ r.legs[0]['id'] }}">
